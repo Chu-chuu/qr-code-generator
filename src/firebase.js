@@ -18,13 +18,13 @@ import {
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBcNLCJsfaA7a4p1qw55S57b5YT58qdtUY",
-  authDomain: "qr-code-generator-1e2ac.firebaseapp.com",
-  projectId: "qr-code-generator-1e2ac",
-  storageBucket: "qr-code-generator-1e2ac.appspot.com",
-  messagingSenderId: "993771413512",
-  appId: "1:993771413512:web:19427079ac3271e6beb1bd",
-  measurementId: "G-XFFH8ZL4SH",
+  apiKey: "AIzaSyBGY9aE89TVaiR9Ex4UfPz-lx7fTW7Xzo8",
+  authDomain: "mishkan-group-qrcode.firebaseapp.com",
+  projectId: "mishkan-group-qrcode",
+  storageBucket: "mishkan-group-qrcode.appspot.com",
+  messagingSenderId: "989503769644",
+  appId: "1:989503769644:web:fe4a64ed87535aa6b31589",
+  // measurementId: "G-XFFH8ZL4SH", for behaviour tracking(google analytics only)
 };
 
 const app = initializeApp(firebaseConfig);
