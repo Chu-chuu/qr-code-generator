@@ -88,7 +88,9 @@ const QRCodeGenerator = () => {
       await updateDoc(farmDocRef, { imageUrl, videoUrl });
 
       // Generate QR code value pointing to the display page
-      const appUrl = process.env.REACT_APP_BASE_URL || "http://localhost:3000";
+      const appUrl =
+        process.env.REACT_APP_BASE_URL ||
+        "https://qr-code-generator-u36z-git-master-ngozi-umekwes-projects.vercel.app/";
       const qrCodeValue = `${appUrl}/display/${docRef.id}`;
       setQRCodeData(qrCodeValue);
     } catch (error) {
