@@ -87,6 +87,7 @@ const QRCodeGenerator = () => {
       const farmDocRef = doc(db, "farms", docId);
       await updateDoc(farmDocRef, { imageUrl, videoUrl });
 
+      // Generate QR code value pointing to the display page
       const appUrl = process.env.REACT_APP_BASE_URL || "http://localhost:3000";
       const qrCodeValue = `${appUrl}/display/${docRef.id}`;
       setQRCodeData(qrCodeValue);

@@ -2,17 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+// import { useAuthState } from "react-firebase-hooks/auth";
 
 const InfoPage = () => {
-  const { id } = useParams();
-  const [user] = useAuthState(auth);
+  const { id } = useParams(); // Get the document ID from the URL
   const [farmData, setFarmData] = useState(null);
 
   useEffect(() => {
     const fetchFarmData = async () => {
       try {
-        const docRef = doc(db, "farms", id);
+        const docRef = doc(db, "farms", id); // Fetch the correct document by ID
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setFarmData(docSnap.data());
@@ -25,7 +24,7 @@ const InfoPage = () => {
     };
 
     fetchFarmData();
-  }, [id, user]);
+  }, [id]);
 
   if (!farmData) return <div>Loading...</div>;
 
@@ -58,35 +57,31 @@ const InfoPage = () => {
         Farm Processes and Additional Information
       </h3>
       <p>
+        {/* Additional info text here */}
         Cotton farming involves several key steps, including soil preparation,
-        planting, pest management, and harvesting. Consistent yields and quality
-        production depend on efficient water management, fertilizer application,
-        and timely harvesting.
-      </p>
-      <p>
-        After harvesting, cotton is ginned to separate the lint from the seeds.
-        The lint is used for textile production, while the seeds can be used for
-        oil extraction or other agricultural purposes.
-      </p>
-      <p>
-        Advanced farming techniques, such as drip irrigation and integrated pest
-        management, can enhance productivity and sustainability on cotton farms.
+        planting, pest management, and harvesting...
       </p>
 
       <h3 className="text-xl mt-6">Images</h3>
-      {farmData.images && farmData.images.length > 0 ? (
+      {farmData.imageUrl ? (
         <div>
-          {farmData.images.map((imgSrc, index) => (
-            <img
-              key={index}
-              src={imgSrc}
-              alt={`Image ${index}`}
-              style={{ width: "100%", maxWidth: "600px", marginBottom: "10px" }}
-            />
-          ))}
+          <img
+            src={farmData.imageUrl}
+            alt="Farm Image"
+            style={{ width: "100%", maxWidth: "600px", marginBottom: "10px" }}
+          />
         </div>
       ) : (
         <p>No images available.</p>
+      )}
+
+      <h3 className="text-xl mt-6">Video</h3>
+      {farmData.videoUrl ? (
+        <video controls style={{ width: "100%", maxWidth: "600px" }}>
+          <source src={farmData.videoUrl} type="video/mp4" />
+        </video>
+      ) : (
+        <p>No video available.</p>
       )}
     </div>
   );
