@@ -34,7 +34,10 @@ const QRCodeGenerator = () => {
     farmName: "",
     farmerName: "",
     yieldPerAcre: "",
+    amountPerAcre: "",
+    lintByAcre: "",
     oilProduced: "",
+    farmDescription: "",
   });
 
   const [imageFiles, handleImageChange] = useMultipleFileInput();
@@ -50,9 +53,20 @@ const QRCodeGenerator = () => {
       return;
     }
 
-    if (!farmData.farmName || !farmData.farmerName || !farmData.yieldPerAcre) {
-      alert("Please fill out all required fields.");
-      return;
+    // Validate required fields
+    const requiredFields = [
+      "farmerName",
+      "yieldPerAcre",
+      "amountPerAcre",
+      "lintByAcre",
+      "oilProduced",
+      "farmDescription",
+    ];
+    for (const field of requiredFields) {
+      if (!farmData[field]) {
+        alert(`Please fill out all required fields: ${field}`);
+        return;
+      }
     }
 
     setIsLoading(true);
@@ -63,7 +77,7 @@ const QRCodeGenerator = () => {
       const docId = docRef.id;
 
       const uploadFiles = async (files, folder) => {
-        const uploadPromises = files.map(async (file, index) => {
+        const uploadPromises = files.map(async (file) => {
           const fileRef = ref(storage, `farms/${docId}/${folder}/${file.name}`);
           await uploadBytes(fileRef, file);
           return getDownloadURL(fileRef);
@@ -105,21 +119,6 @@ const QRCodeGenerator = () => {
             QR Code Generator
           </h1>
           <form className="space-y-4" onSubmit={handleSubmit}>
-            {/* Farm Name */}
-            <div>
-              <label htmlFor="farmName" className="block font-medium">
-                Farm Name
-              </label>
-              <input
-                type="text"
-                id="farmName"
-                name="farmName"
-                value={farmData.farmName}
-                onChange={handleInputChange}
-                required
-                className="w-full p-2 border border-gray-300 rounded-md"
-              />
-            </div>
             {/* Farmer Name */}
             <div>
               <label htmlFor="farmerName" className="block font-medium">
@@ -150,6 +149,36 @@ const QRCodeGenerator = () => {
                 className="w-full p-2 border border-gray-300 rounded-md"
               />
             </div>
+            {/* Amount Per Acre */}
+            <div>
+              <label htmlFor="amountPerAcre" className="block font-medium">
+                Amount Per Acre
+              </label>
+              <input
+                type="text"
+                id="amountPerAcre"
+                name="amountPerAcre"
+                value={farmData.amountPerAcre}
+                onChange={handleInputChange}
+                required
+                className="w-full p-2 border border-gray-300 rounded-md"
+              />
+            </div>
+            {/* Lint By Acre */}
+            <div>
+              <label htmlFor="lintByAcre" className="block font-medium">
+                Lint By Acre
+              </label>
+              <input
+                type="text"
+                id="lintByAcre"
+                name="lintByAcre"
+                value={farmData.lintByAcre}
+                onChange={handleInputChange}
+                required
+                className="w-full p-2 border border-gray-300 rounded-md"
+              />
+            </div>
             {/* Oil Produced */}
             <div>
               <label htmlFor="oilProduced" className="block font-medium">
@@ -164,6 +193,20 @@ const QRCodeGenerator = () => {
                 required
                 className="w-full p-2 border border-gray-300 rounded-md"
               />
+            </div>
+            {/* Farm Description */}
+            <div>
+              <label htmlFor="farmDescription" className="block font-medium">
+                Farm Description
+              </label>
+              <textarea
+                id="farmDescription"
+                name="farmDescription"
+                value={farmData.farmDescription}
+                onChange={handleInputChange}
+                required
+                className="w-full p-2 border border-gray-300 rounded-md"
+              ></textarea>
             </div>
             {/* Multiple Image Upload */}
             <div>
