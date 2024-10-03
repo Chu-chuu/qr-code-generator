@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
-import { db, auth } from "../firebase";
-// import { useAuthState } from "react-firebase-hooks/auth";
+import { db } from "../firebase";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // Import carousel styles
 
 const InfoPage = () => {
-  const { id } = useParams(); // Get the document ID from the URL
+  const { id } = useParams();
   const [farmData, setFarmData] = useState(null);
 
   useEffect(() => {
     const fetchFarmData = async () => {
       try {
-        const docRef = doc(db, "farms", id); // Fetch the correct document by ID
+        const docRef = doc(db, "farms", id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setFarmData(docSnap.data());
@@ -26,63 +27,94 @@ const InfoPage = () => {
     fetchFarmData();
   }, [id]);
 
-  if (!farmData) return <div>Loading...</div>;
+  if (!farmData)
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        Loading...
+      </div>
+    );
 
   return (
-    <div className="min-h-screen bg-white p-6">
-      <h2 className="text-2xl mb-4">Farm Information</h2>
-      <p>
-        <strong>Farm Name:</strong> {farmData.farmName}
-      </p>
-      <p>
-        <strong>Farmer Name:</strong> {farmData.farmerName}
-      </p>
-      <p>
-        <strong>Yield per Acre:</strong> {farmData.yieldPerAcre}
-      </p>
-      <p>
-        <strong>Amount per Acre:</strong> {farmData.amountPerAcre}
-      </p>
-      <p>
-        <strong>Lint by Acre:</strong> {farmData.lintByAcre}
-      </p>
-      <p>
-        <strong>Oil Produced from Seed:</strong> {farmData.oilFromSeed}
-      </p>
-      <p>
-        <strong>Amount of Oil Produced:</strong> {farmData.oilProduced}
-      </p>
-
-      <h3 className="text-xl mt-6">
-        Farm Processes and Additional Information
-      </h3>
-      <p>
-        {/* Additional info text here */}
-        Cotton farming involves several key steps, including soil preparation,
-        planting, pest management, and harvesting...
-      </p>
-
-      <h3 className="text-xl mt-6">Images</h3>
+    <div className="min-h-screen bg-gray-50 p-6">
+      {/* Image Carousel */}
       {farmData.imageUrl ? (
-        <div>
-          <img
-            src={farmData.imageUrl}
-            alt="Farm Image"
-            style={{ width: "100%", maxWidth: "600px", marginBottom: "10px" }}
-          />
+        <div className="mb-8">
+          <Carousel
+            showThumbs={false}
+            autoPlay
+            infiniteLoop
+            className="max-w-4xl mx-auto shadow-lg rounded-lg"
+          >
+            {farmData.imageUrl.map((image, index) => (
+              <div key={index}>
+                <img
+                  src={image}
+                  alt={`Farm Image ${index + 1}`}
+                  className="object-cover"
+                  style={{ height: "400px" }}
+                />
+              </div>
+            ))}
+          </Carousel>
         </div>
       ) : (
-        <p>No images available.</p>
+        <div className="text-center text-gray-500 mb-8">
+          No images available.
+        </div>
       )}
 
-      <h3 className="text-xl mt-6">Video</h3>
-      {farmData.videoUrl ? (
-        <video controls style={{ width: "100%", maxWidth: "600px" }}>
-          <source src={farmData.videoUrl} type="video/mp4" />
-        </video>
-      ) : (
-        <p>No video available.</p>
-      )}
+      {/* Farm Information */}
+      <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+        <h2 className="text-3xl font-bold text-center mb-6">
+          Farm Information
+        </h2>
+        <p className="text-lg mb-4">
+          <strong>Farm Name:</strong> {farmData.farmName}
+        </p>
+        <p className="text-lg mb-4">
+          <strong>Farmer Name:</strong> {farmData.farmerName}
+        </p>
+        <p className="text-lg mb-4">
+          <strong>Yield per Acre:</strong> {farmData.yieldPerAcre}
+        </p>
+        <p className="text-lg mb-4">
+          <strong>Amount per Acre:</strong> {farmData.amountPerAcre}
+        </p>
+        <p className="text-lg mb-4">
+          <strong>Lint by Acre:</strong> {farmData.lintByAcre}
+        </p>
+        <p className="text-lg mb-4">
+          <strong>Oil Produced from Seed:</strong> {farmData.oilFromSeed}
+        </p>
+        <p className="text-lg mb-4">
+          <strong>Amount of Oil Produced:</strong> {farmData.oilProduced}
+        </p>
+
+        {/* Farm Processes */}
+        <h3 className="text-2xl font-semibold mt-8 mb-4">
+          Farm Processes and Additional Information
+        </h3>
+        <p className="text-lg mb-4">
+          Cotton farming involves several key steps, including soil preparation,
+          planting, pest management, and harvesting...
+        </p>
+
+        {/* Video Section */}
+        {farmData.videoUrl ? (
+          <div className="mt-8">
+            <h3 className="text-2xl font-semibold mb-4">Farm Video</h3>
+            <video
+              controls
+              style={{ width: "100%", maxWidth: "600px" }}
+              className="mx-auto"
+            >
+              <source src={farmData.videoUrl} type="video/mp4" />
+            </video>
+          </div>
+        ) : (
+          <p className="text-center text-gray-500 mt-8">No video available.</p>
+        )}
+      </div>
     </div>
   );
 };

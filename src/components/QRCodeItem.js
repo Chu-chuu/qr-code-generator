@@ -2,23 +2,25 @@ import React from "react";
 
 const QRCodeItem = ({ qrCode }) => {
   return (
-    <div className="p-4 border rounded-lg shadow-sm bg-white">
-      <img
-        src={qrCode.imageUrl}
-        alt="QR Code"
-        className="w-full h-40 object-contain"
-      />
-      <div className="mt-4">
-        <h3 className="text-lg font-semibold">{qrCode.name}</h3>
-        <p className="text-sm text-gray-600">Link: {qrCode.link}</p>
-        <p className="text-sm text-gray-600">Clicks: {qrCode.clicks}</p>
-        <button
-          className="mt-4 bg-[#BD9E5A] text-white px-4 py-2 rounded"
-          onClick={() => navigator.clipboard.writeText(qrCode.link)}
-        >
-          Share Link
-        </button>
-      </div>
+    <div className="bg-white p-4 shadow rounded-lg">
+      <h3 className="text-lg font-semibold">{qrCode.farmName}</h3>
+      <p>{qrCode.description}</p>
+
+      {/* Display QR Code if there's a URL for it */}
+      {qrCode.qrCodeURL && (
+        <img
+          src={qrCode.qrCodeURL}
+          alt={`QR Code for ${qrCode.farmName}`}
+          className="w-full h-auto mt-4"
+        />
+      )}
+
+      {/* Additional details */}
+      <p className="mt-2 text-sm">Amount per Acre: {qrCode.amountPerAcre}</p>
+      <p className="mt-2 text-sm">Lint by Acre: {qrCode.lintByAcre}</p>
+      <p className="mt-2 text-sm">
+        Oil Produced from Seed: {qrCode.oilProduced}
+      </p>
     </div>
   );
 };

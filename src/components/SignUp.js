@@ -43,8 +43,6 @@ const Signup = () => {
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-50">
       <TopBar />
-
-      {/* Form container with slender look */}
       <div className="w-full max-w-sm bg-white p-10 rounded-lg shadow-lg mt-8">
         <h1 className="text-2xl font-bold text-[rgb(30,44,104)] mb-2 text-center">
           Create an account
