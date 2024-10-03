@@ -17,15 +17,15 @@ const useFormInput = (initialState) => {
   return [formData, handleInputChange];
 };
 
-const useFileInput = (initialState) => {
-  const [file, setFile] = useState(initialState);
+const useMultipleFileInput = () => {
+  const [files, setFiles] = useState([]);
 
   const handleFileChange = (e) => {
-    const { files } = e.target;
-    setFile(files[0]);
+    const { files: selectedFiles } = e.target;
+    setFiles(Array.from(selectedFiles));
   };
 
-  return [file, handleFileChange];
+  return [files, handleFileChange];
 };
 
 const QRCodeGenerator = () => {
@@ -36,8 +36,9 @@ const QRCodeGenerator = () => {
     yieldPerAcre: "",
     oilProduced: "",
   });
-  const [imageFile, handleImageChange] = useFileInput(null);
-  const [videoFile, handleVideoChange] = useFileInput(null);
+
+  const [imageFiles, handleImageChange] = useMultipleFileInput();
+  const [videoFiles, handleVideoChange] = useMultipleFileInput();
   const [qrCodeData, setQRCodeData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -57,29 +58,35 @@ const QRCodeGenerator = () => {
     setIsLoading(true);
 
     try {
+      // Add farm data to Firestore
       const docRef = await addDoc(collection(db, "farms"), farmData);
       const docId = docRef.id;
 
-      let imageUrl = "";
-      let videoUrl = "";
+      const uploadFiles = async (files, folder) => {
+        const uploadPromises = files.map(async (file, index) => {
+          const fileRef = ref(storage, `farms/${docId}/${folder}/${file.name}`);
+          await uploadBytes(fileRef, file);
+          return getDownloadURL(fileRef);
+        });
+        return Promise.all(uploadPromises);
+      };
 
-      if (imageFile) {
-        const imageRef = ref(storage, `farms/${docId}/image`);
-        await uploadBytes(imageRef, imageFile);
-        imageUrl = await getDownloadURL(imageRef);
-      }
+      // Upload images and get URLs
+      const imageUrls = imageFiles.length
+        ? await uploadFiles(imageFiles, "images")
+        : [];
 
-      if (videoFile) {
-        const videoRef = ref(storage, `farms/${docId}/video`);
-        await uploadBytes(videoRef, videoFile);
-        videoUrl = await getDownloadURL(videoRef);
-      }
+      // Upload videos and get URLs
+      const videoUrls = videoFiles.length
+        ? await uploadFiles(videoFiles, "videos")
+        : [];
 
+      // Update Firestore with the uploaded file URLs
       const farmDocRef = doc(db, "farms", docId);
-      await updateDoc(farmDocRef, { imageUrl, videoUrl });
+      await updateDoc(farmDocRef, { imageUrls, videoUrls });
 
       const appUrl = process.env.REACT_APP_BASE_URL || "http://localhost:3000";
-      const qrCodeValue = `${appUrl}/display/${docRef.id}`;
+      const qrCodeValue = `${appUrl}/display/${docId}`;
       setQRCodeData(qrCodeValue);
     } catch (error) {
       console.error("Error adding document: ", error);
@@ -158,31 +165,33 @@ const QRCodeGenerator = () => {
                 className="w-full p-2 border border-gray-300 rounded-md"
               />
             </div>
-            {/* Image Upload */}
+            {/* Multiple Image Upload */}
             <div>
-              <label htmlFor="imageFile" className="block font-medium">
-                Upload Image
+              <label htmlFor="imageFiles" className="block font-medium">
+                Upload Images
               </label>
               <div className="flex items-center space-x-2">
                 <input
                   type="file"
-                  id="imageFile"
+                  id="imageFiles"
                   onChange={handleImageChange}
+                  multiple
                   className="w-full p-2 border border-gray-300 rounded-md"
                 />
                 <FiUpload className="text-gray-500" />
               </div>
             </div>
-            {/* Video Upload */}
+            {/* Multiple Video Upload */}
             <div>
-              <label htmlFor="videoFile" className="block font-medium">
-                Upload Video
+              <label htmlFor="videoFiles" className="block font-medium">
+                Upload Videos
               </label>
               <div className="flex items-center space-x-2">
                 <input
                   type="file"
-                  id="videoFile"
+                  id="videoFiles"
                   onChange={handleVideoChange}
+                  multiple
                   className="w-full p-2 border border-gray-300 rounded-md"
                 />
                 <FiUpload className="text-gray-500" />
