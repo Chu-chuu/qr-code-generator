@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
-import { db, auth } from "../firebase";
+import { db } from "../firebase";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
-import { Pagination, Navigation } from "swiper";
+import "swiper/css/navigation"; // Import the Swiper CSS for navigation
+import { Pagination, Navigation } from "swiper/modules"; // Correct way to import modules
 
 const InfoPage = () => {
   const { id } = useParams(); // Get the document ID from the URL
