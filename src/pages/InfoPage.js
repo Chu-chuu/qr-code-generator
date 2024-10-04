@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import { Pagination, Navigation } from "swiper";
 
 const InfoPage = () => {
   const { id } = useParams(); // Get the document ID from the URL
@@ -49,27 +53,27 @@ const InfoPage = () => {
         <strong>Oil Produced from Seed:</strong> {farmData.oilProduced}
       </p>
 
-      <h3 className="text-xl mt-6">
-        Farm Processes and Additional Information
-      </h3>
-      <p>
-        Cotton farming involves several key steps, including soil preparation,
-        planting, pest management, and harvesting...
-      </p>
-
       <h3 className="text-xl mt-6">Images</h3>
       {farmData.imageUrls && farmData.imageUrls.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <Swiper
+          spaceBetween={10}
+          slidesPerView={1}
+          pagination={{ clickable: true }}
+          navigation
+          modules={[Pagination, Navigation]}
+          className="w-full max-w-md"
+        >
           {farmData.imageUrls.map((url, index) => (
-            <img
-              key={index}
-              src={url}
-              alt={`Farm Image ${index + 1}`}
-              className="w-full max-w-xs"
-              style={{ marginBottom: "10px" }}
-            />
+            <SwiperSlide key={index}>
+              <img
+                src={url}
+                alt={`Farm Image ${index + 1}`}
+                className="w-full h-auto"
+                style={{ marginBottom: "10px" }}
+              />
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
       ) : (
         <p>No images available.</p>
       )}
