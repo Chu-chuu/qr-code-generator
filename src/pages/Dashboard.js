@@ -133,7 +133,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { logOut } from "../AuthProvider";
 import { useAuthState } from "react-firebase-hooks/auth";
-import QRCodeItem from "../components/QRCodeItem"; // Component for displaying QR codes
+import QRCodeItem from "../components/QRCodeItem";
 import { db, auth } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import QRCodeGenerator from "../components/QRCodeGenerator";
@@ -154,7 +154,6 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchFarms = async () => {
       try {
-        // Fetch QR Codes from the "farms" collection
         const farmsSnapshot = await getDocs(collection(db, "farms"));
         const farmsData = farmsSnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -177,31 +176,26 @@ const Dashboard = () => {
       console.error("Failed to log out:", error);
     }
   };
-  const firstName = user?.displayName.split(" ")[0]; // Extract first name
+
+  const firstName = user?.displayName?.split(" ")[0] || "Guest"; // Handle null or empty displayName
 
   return (
     <div className="min-h-screen flex">
-      {/* Sidebar (Navigation Component) */}
       <Navigation
         activeComponent={activeComponent}
         setActiveComponent={setActiveComponent}
         handleLogout={handleLogout}
       />
 
-      {/* Main Content Area */}
       <div className="w-3/4 bg-gray-100">
-        {/* Top Navigation */}
         <div className="w-full bg-white p-4 shadow-md flex justify-between items-center">
           <h1 className="text-2xl font-bold">
-            {/* {user && `Hello, ${user.displayName.split(" ")[0]}`}{" "} */}
-            {/* First name */}
-            {user && `Hello, ${firstName}`} {/* Only the first name */}
+            {`Hello, ${firstName}`}
           </h1>
 
-          {/* Profile Section */}
           <div className="flex items-center space-x-4">
             <img
-              src={user?.photoURL || "default_profile_picture.png"} // Replace with a default image if needed
+              src={user?.photoURL || "default_profile_picture.png"}
               alt="Profile"
               className="h-10 w-10 rounded-full"
             />
@@ -209,7 +203,7 @@ const Dashboard = () => {
               <p className="font-semibold">{firstName}</p>
               <button
                 className="text-blue-500"
-                onClick={() => navigate("/profile")} // Navigate to the profile page
+                onClick={() => navigate("/profile")}
               >
                 View Profile
               </button>
@@ -217,7 +211,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Main Dashboard Content */}
         <div className="p-6">
           {activeComponent === "home" ? (
             <div>

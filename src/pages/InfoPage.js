@@ -61,7 +61,7 @@ const InfoPage = () => {
               <SwiperSlide key={index}>
                 <img
                   src={url}
-                  alt={`Farm Image ${index + 1}`}
+                  alt={`Farm Pic ${index + 1}`}
                   className="w-full h-[500px] object-cover"
                 />
               </SwiperSlide>

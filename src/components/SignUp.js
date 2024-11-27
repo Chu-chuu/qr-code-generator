@@ -4,6 +4,7 @@ import { signUpWithEmailAndPassword, signInWithGoogle } from "../AuthProvider";
 import TopBar from "./TopBar";
 import { AiOutlineUser, AiOutlineMail, AiOutlineLock } from "react-icons/ai"; // Icons for user, email, password
 import { FiEye, FiEyeOff } from "react-icons/fi"; // Icons for view/hide password
+import { updateProfile } from "firebase/auth";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
@@ -16,20 +17,33 @@ const Signup = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+ // Import updateProfile
+
   const handleSignup = async (event) => {
     event.preventDefault();
+    
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-
+  
     try {
-      await signUpWithEmailAndPassword(email, password);
+      // Sign up the user with email and password
+      const userCredential = await signUpWithEmailAndPassword(email, password); 
+      const user = userCredential.user;
+  
+      // Update the user profile with their full name
+      await updateProfile(user, {
+        displayName: `${firstName} ${lastName}`, // Combine first and last name
+      });
+  
+      // Navigate to the dashboard
       navigate("/dashboard");
     } catch (error) {
       setError(error.message);
     }
   };
+  
 
   const handleGoogleSignIn = async () => {
     try {

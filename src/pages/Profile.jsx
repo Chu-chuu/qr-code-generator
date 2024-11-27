@@ -1,22 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   updatePassword,
   reauthenticateWithCredential,
   EmailAuthProvider,
   updateProfile,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const Profile = () => {
   const [name, setName] = useState(auth.currentUser?.displayName || "");
   const [newPassword, setNewPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [photo, setPhoto] = useState(
-    auth.currentUser?.photoURL || "defaultProfilePicURL"
-  );
+  const [photo, setPhoto] = useState("");
   const navigate = useNavigate();
+  const defaultPhotoURL = "https://example.com/default-profile-photo.png"; // Replace with your default profile photo URL
+  const storage = getStorage();
+
+  // Set default profile photo if none exists
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setPhoto(user.photoURL || defaultPhotoURL);
+        if (!user.photoURL) {
+          updateProfile(user, { photoURL: defaultPhotoURL }).catch((error) => {
+            console.error("Error setting default photo:", error.message);
+          });
+        }
+      }
+    });
+  }, []);
 
   // Function to handle updating the user's name
   const handleNameChange = async () => {
@@ -25,8 +41,9 @@ const Profile = () => {
         await updateProfile(auth.currentUser, {
           displayName: name,
           photoURL: photo,
-        }); // Include photoURL here
+        });
         setMessage("Name updated successfully!");
+        navigate("/dashboard");
       } catch (error) {
         setMessage(`Error updating name: ${error.message}`);
       }
@@ -37,25 +54,25 @@ const Profile = () => {
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Here you would upload the file to Firebase Storage
-      // After upload, you would update the photo URL in Firebase Auth
-      const newPhotoURL = "uploadedImageURL"; // Replace with the URL of the uploaded image
-      setPhoto(newPhotoURL);
-      updateProfile(auth.currentUser, { photoURL: newPhotoURL }).catch(
-        (error) => {
-          setMessage(`Error updating photo: ${error.message}`);
-        }
-      );
+      const user = auth.currentUser;
+      const storageRef = ref(storage, `profilePhotos/${user.uid}/${file.name}`);
+
+      // Upload the file to Firebase Storage
+      uploadBytes(storageRef, file)
+        .then(() => getDownloadURL(storageRef)) // Get uploaded file URL
+        .then((url) => {
+          setPhoto(url); // Update photo in state
+          return updateProfile(user, { photoURL: url }); // Update photo URL in Firebase Auth
+        })
+        .then(() => setMessage("Profile photo updated successfully!"))
+        .catch((error) => setMessage(`Error updating photo: ${error.message}`));
     }
   };
 
   // Function to reauthenticate user before changing password
   const reauthenticate = async (currentPassword) => {
     const user = auth.currentUser;
-    const credentials = EmailAuthProvider.credential(
-      user.email,
-      currentPassword
-    );
+    const credentials = EmailAuthProvider.credential(user.email, currentPassword);
     try {
       await reauthenticateWithCredential(user, credentials);
       return true;
@@ -90,7 +107,7 @@ const Profile = () => {
         {/* Profile Photo Section */}
         <div className="flex flex-col items-center mb-6">
           <img
-            src={photo || "defaultProfilePicURL"} // Use the state variable
+            src={photo}
             alt="Profile"
             className="w-24 h-24 rounded-full mb-4 border-2 border-gray-300"
           />
