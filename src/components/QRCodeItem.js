@@ -16,6 +16,9 @@ const QRCodeItem = ({ qrCode }) => {
       )}
 
       {/* Additional details */}
+      <p className="mt-2 text-sm">
+        Farmer Name: <span className="font-bold">{qrCode.farmerName}</span>
+      </p>
       <p className="mt-2 text-sm">Amount per Acre: {qrCode.amountPerAcre}</p>
       <p className="mt-2 text-sm">Lint by Acre: {qrCode.lintByAcre}</p>
       <p className="mt-2 text-sm">
