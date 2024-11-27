@@ -131,7 +131,7 @@ const QRCodeGenerator = () => {
                 value={farmData.farmerName}
                 onChange={handleInputChange}
                 required
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="w-full p-2 border border-gray-300 rounded-md text-black"
               />
             </div>
             {/* Yield Per Acre */}
@@ -146,7 +146,7 @@ const QRCodeGenerator = () => {
                 value={farmData.yieldPerAcre}
                 onChange={handleInputChange}
                 required
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="w-full p-2 border border-gray-300 rounded-md text-black"
               />
             </div>
             {/* Amount Per Acre */}
@@ -161,7 +161,7 @@ const QRCodeGenerator = () => {
                 value={farmData.amountPerAcre}
                 onChange={handleInputChange}
                 required
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="w-full p-2 border border-gray-300 rounded-md text-black"
               />
             </div>
             {/* Lint By Acre */}
@@ -176,7 +176,7 @@ const QRCodeGenerator = () => {
                 value={farmData.lintByAcre}
                 onChange={handleInputChange}
                 required
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="w-full p-2 border border-gray-300 rounded-md text-black"
               />
             </div>
             {/* Oil Produced */}
@@ -191,7 +191,7 @@ const QRCodeGenerator = () => {
                 value={farmData.oilProduced}
                 onChange={handleInputChange}
                 required
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="w-full p-2 border border-gray-300 rounded-md text-black"
               />
             </div>
             {/* Farm Description */}
@@ -205,7 +205,7 @@ const QRCodeGenerator = () => {
                 value={farmData.farmDescription}
                 onChange={handleInputChange}
                 required
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="w-full p-2 border border-gray-300 rounded-md text-black"
               ></textarea>
             </div>
             {/* Multiple Image Upload */}

@@ -13,7 +13,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+'s '        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/password-reset" element={<PasswordReset />} />
         <Route path="/signup" element={<SignUp />} />
