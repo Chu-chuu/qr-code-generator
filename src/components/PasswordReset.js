@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { sendPasswordResetEmail } from "../AuthProvider"; // Assuming this is your custom provider
 import { auth } from "../firebase"; // Firebase setup
-
 const PasswordReset = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-
   const handlePasswordReset = async (e) => {
     e.preventDefault();
     try {
@@ -15,7 +13,6 @@ const PasswordReset = () => {
       setMessage(`Error: ${error.message}`);
     }
   };
-
   return (
     <div className="flex flex-col justify-center items-center min-h-screen">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
@@ -45,5 +42,12 @@ const PasswordReset = () => {
     </div>
   );
 };
-
 export default PasswordReset;
+
+
+
+
+
+
+
+

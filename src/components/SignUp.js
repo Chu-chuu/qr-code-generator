@@ -5,7 +5,6 @@ import TopBar from "./TopBar";
 import { AiOutlineUser, AiOutlineMail, AiOutlineLock } from "react-icons/ai"; // Icons for user, email, password
 import { FiEye, FiEyeOff } from "react-icons/fi"; // Icons for view/hide password
 import { updateProfile } from "firebase/auth";
-
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -16,35 +15,27 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // For confirm password visibility toggle
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
  // Import updateProfile
-
   const handleSignup = async (event) => {
     event.preventDefault();
-    
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-  
     try {
       // Sign up the user with email and password
-      const userCredential = await signUpWithEmailAndPassword(email, password); 
+      const userCredential = await signUpWithEmailAndPassword(email, password);
       const user = userCredential.user;
-  
       // Update the user profile with their full name
       await updateProfile(user, {
         displayName: `${firstName} ${lastName}`, // Combine first and last name
       });
-  
       // Navigate to the dashboard
       navigate("/dashboard");
     } catch (error) {
       setError(error.message);
     }
   };
-  
-
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
@@ -53,7 +44,6 @@ const Signup = () => {
       setError(error.message);
     }
   };
-
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-50">
       <TopBar />
@@ -64,7 +54,6 @@ const Signup = () => {
         <p className="text-gray-500 text-center mb-6">
           Sign up with your email
         </p>
-
         {/* Signup Form */}
         <form onSubmit={handleSignup}>
           <div className="mb-4 relative">
@@ -78,7 +67,6 @@ const Signup = () => {
               className="w-full px-10 py-2 border rounded-md bg-gray-100 text-gray-700 focus:ring-2 focus:ring-[rgb(189,158,90)]"
             />
           </div>
-
           <div className="mb-4 relative">
             {/* Last Name Icon */}
             <AiOutlineUser className="absolute left-3 top-3 text-gray-400 text-xl" />
@@ -90,7 +78,6 @@ const Signup = () => {
               className="w-full px-10 py-2 border rounded-md bg-gray-100 text-gray-700 focus:ring-2 focus:ring-[rgb(189,158,90)]"
             />
           </div>
-
           <div className="mb-4 relative">
             {/* Email Icon */}
             <AiOutlineMail className="absolute left-3 top-3 text-gray-400 text-xl" />
@@ -102,7 +89,6 @@ const Signup = () => {
               className="w-full px-10 py-2 border rounded-md bg-gray-100 text-gray-700 focus:ring-2 focus:ring-[rgb(189,158,90)]"
             />
           </div>
-
           <div className="mb-4 relative">
             {/* Password Icon */}
             <AiOutlineLock className="absolute left-3 top-3 text-gray-400 text-xl" />
@@ -125,7 +111,6 @@ const Signup = () => {
               )}
             </div>
           </div>
-
           <div className="mb-4 relative">
             {/* Confirm Password Icon */}
             <AiOutlineLock className="absolute left-3 top-3 text-gray-400 text-xl" />
@@ -148,7 +133,6 @@ const Signup = () => {
               )}
             </div>
           </div>
-
           {/* Button styling */}
           <button
             type="submit"
@@ -164,7 +148,6 @@ const Signup = () => {
             Sign Up with Google
           </button>
         </form>
-
         {/* Link to Login */}
         <p className="mt-10 -mb-5 text-center text-gray-700">
           Already have an account?{" "}
@@ -172,11 +155,17 @@ const Signup = () => {
             Login
           </a>
         </p>
-
         {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
       </div>
     </div>
   );
 };
-
 export default Signup;
+
+
+
+
+
+
+
+

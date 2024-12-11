@@ -5,29 +5,22 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth, db, storage } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FiUpload } from "react-icons/fi";
-
 const useFormInput = (initialState) => {
   const [formData, setFormData] = useState(initialState);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
-
   return [formData, handleInputChange];
 };
-
 const useMultipleFileInput = () => {
   const [files, setFiles] = useState([]);
-
   const handleFileChange = (e) => {
     const { files: selectedFiles } = e.target;
     setFiles(Array.from(selectedFiles));
   };
-
   return [files, handleFileChange];
 };
-
 const QRCodeGenerator = () => {
   const [user] = useAuthState(auth);
   const [farmData, handleInputChange] = useFormInput({
@@ -39,26 +32,20 @@ const QRCodeGenerator = () => {
     oilProduced: "",
     farmDescription: "",
   });
-
   const [imageFiles, handleImageChange] = useMultipleFileInput();
   const [videoFiles, handleVideoChange] = useMultipleFileInput();
   const [qrCodeData, setQRCodeData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!user) {
       alert("Please sign in to generate a QR code");
       return;
     }
-
     // Validate required fields
     const requiredFields = [
       "farmerName",
       "yieldPerAcre",
-      "amountPerAcre",
-      "lintByAcre",
       "oilProduced",
       "farmDescription",
     ];
@@ -68,14 +55,11 @@ const QRCodeGenerator = () => {
         return;
       }
     }
-
     setIsLoading(true);
-
     try {
       // Add farm data to Firestore
       const docRef = await addDoc(collection(db, "farms"), farmData);
       const docId = docRef.id;
-
       const uploadFiles = async (files, folder) => {
         const uploadPromises = files.map(async (file) => {
           const fileRef = ref(storage, `farms/${docId}/${folder}/${file.name}`);
@@ -84,21 +68,17 @@ const QRCodeGenerator = () => {
         });
         return Promise.all(uploadPromises);
       };
-
       // Upload images and get URLs
       const imageUrls = imageFiles.length
         ? await uploadFiles(imageFiles, "images")
         : [];
-
       // Upload videos and get URLs
       const videoUrls = videoFiles.length
         ? await uploadFiles(videoFiles, "videos")
         : [];
-
       // Update Firestore with the uploaded file URLs
       const farmDocRef = doc(db, "farms", docId);
       await updateDoc(farmDocRef, { imageUrls, videoUrls });
-
       const appUrl = process.env.REACT_APP_BASE_URL || "http://localhost:3000";
       const qrCodeValue = `${appUrl}/display/${docId}`;
       setQRCodeData(qrCodeValue);
@@ -109,7 +89,6 @@ const QRCodeGenerator = () => {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-[#1E2C68] p-10 rounded-lg shadow-lg text-white w-full max-w-7xl flex">
@@ -152,22 +131,22 @@ const QRCodeGenerator = () => {
             {/* Amount Per Acre */}
             <div>
               <label htmlFor="amountPerAcre" className="block font-medium">
-                Amount Per Acre
+                By Products
               </label>
               <input
                 type="text"
-                id="amountPerAcre"
-                name="amountPerAcre"
-                value={farmData.amountPerAcre}
+                id="byProducts"
+                name="byProducts"
+                value={farmData.byProducts}
                 onChange={handleInputChange}
                 required
                 className="w-full p-2 border border-gray-300 rounded-md text-black"
               />
             </div>
             {/* Lint By Acre */}
-            <div>
+            {/* <div>
               <label htmlFor="lintByAcre" className="block font-medium">
-                Lint By Acre
+                By-Product
               </label>
               <input
                 type="text"
@@ -178,7 +157,7 @@ const QRCodeGenerator = () => {
                 required
                 className="w-full p-2 border border-gray-300 rounded-md text-black"
               />
-            </div>
+            </div> */}
             {/* Oil Produced */}
             <div>
               <label htmlFor="oilProduced" className="block font-medium">
@@ -240,7 +219,6 @@ const QRCodeGenerator = () => {
                 <FiUpload className="text-gray-500" />
               </div>
             </div>
-
             {/* Submit Button */}
             <div className="text-center">
               <button
@@ -253,7 +231,6 @@ const QRCodeGenerator = () => {
             </div>
           </form>
         </div>
-
         {/* QR Code Display Section */}
         {qrCodeData && (
           <div className="w-1/2 flex justify-center items-center">
@@ -267,5 +244,12 @@ const QRCodeGenerator = () => {
     </div>
   );
 };
-
 export default QRCodeGenerator;
+
+
+
+
+
+
+
+

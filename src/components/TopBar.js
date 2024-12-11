@@ -1,5 +1,4 @@
 import React from "react";
-
 const TopBar = () => {
   return (
     <div className="flex justify-start items-center w-full bg-[rgb(30,44,104)] p-2">
@@ -11,5 +10,10 @@ const TopBar = () => {
     </div>
   );
 };
-
 export default TopBar;
+
+
+
+
+
+

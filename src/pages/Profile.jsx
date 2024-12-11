@@ -9,7 +9,6 @@ import {
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
 const Profile = () => {
   const [name, setName] = useState(auth.currentUser?.displayName || "");
   const [newPassword, setNewPassword] = useState("");
@@ -19,7 +18,6 @@ const Profile = () => {
   const navigate = useNavigate();
   const defaultPhotoURL = "https://example.com/default-profile-photo.png"; // Replace with your default profile photo URL
   const storage = getStorage();
-
   // Set default profile photo if none exists
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -33,7 +31,6 @@ const Profile = () => {
       }
     });
   }, []);
-
   // Function to handle updating the user's name
   const handleNameChange = async () => {
     if (name) {
@@ -49,14 +46,12 @@ const Profile = () => {
       }
     }
   };
-
   // Function to handle profile photo upload
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const user = auth.currentUser;
       const storageRef = ref(storage, `profilePhotos/${user.uid}/${file.name}`);
-
       // Upload the file to Firebase Storage
       uploadBytes(storageRef, file)
         .then(() => getDownloadURL(storageRef)) // Get uploaded file URL
@@ -64,11 +59,10 @@ const Profile = () => {
           setPhoto(url); // Update photo in state
           return updateProfile(user, { photoURL: url }); // Update photo URL in Firebase Auth
         })
-        .then(() => setMessage("Profile photo updated successfully!"))
+        .then(() => alert("Profile photo updated successfully!"))
         .catch((error) => setMessage(`Error updating photo: ${error.message}`));
     }
   };
-
   // Function to reauthenticate user before changing password
   const reauthenticate = async (currentPassword) => {
     const user = auth.currentUser;
@@ -81,12 +75,10 @@ const Profile = () => {
       return false;
     }
   };
-
   // Function to handle updating the password
   const handlePasswordChange = async () => {
     const user = auth.currentUser;
     const reauthenticated = await reauthenticate(currentPassword);
-
     if (reauthenticated && newPassword) {
       try {
         await updatePassword(user, newPassword);
@@ -96,14 +88,12 @@ const Profile = () => {
       }
     }
   };
-
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold text-[rgb(30,44,104)] mb-6 text-center">
           Profile Settings
         </h1>
-
         {/* Profile Photo Section */}
         <div className="flex flex-col items-center mb-6">
           <img
@@ -118,7 +108,6 @@ const Profile = () => {
             className="mb-4"
           />
         </div>
-
         {/* Name change form */}
         <div className="mb-6">
           <label className="block text-gray-700 mb-2">Name:</label>
@@ -135,7 +124,6 @@ const Profile = () => {
             Update Name
           </button>
         </div>
-
         {/* Password change form */}
         <div className="mt-6">
           <label className="block text-gray-700 mb-2">Current Password:</label>
@@ -161,12 +149,10 @@ const Profile = () => {
             Update Password
           </button>
         </div>
-
         {/* Message output */}
         {message && (
           <p className="text-green-500 mt-4 text-center">{message}</p>
         )}
-
         {/* Back to Dashboard Button */}
         <button
           onClick={() => navigate("/dashboard")}
@@ -178,5 +164,12 @@ const Profile = () => {
     </div>
   );
 };
-
 export default Profile;
+
+
+
+
+
+
+
+

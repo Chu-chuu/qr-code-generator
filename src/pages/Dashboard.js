@@ -7,19 +7,16 @@ import { db, auth } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import QRCodeGenerator from "../components/QRCodeGenerator";
 import Navigation from "../components/Navigation";
-
 const Dashboard = () => {
   const [activeComponent, setActiveComponent] = useState("home");
   const [user, loading] = useAuthState(auth);
   const [farms, setFarms] = useState([]);
   const navigate = useNavigate();
-
   useEffect(() => {
     if (!loading && !user) {
       navigate("/"); // Redirect to login if user is not logged in
     }
   }, [user, loading, navigate]);
-
   useEffect(() => {
     const fetchFarms = async () => {
       try {
@@ -33,10 +30,8 @@ const Dashboard = () => {
         console.error("Error fetching farms:", error);
       }
     };
-
     fetchFarms();
   }, []);
-
   const handleLogout = async () => {
     try {
       await logOut();
@@ -45,9 +40,7 @@ const Dashboard = () => {
       console.error("Failed to log out:", error);
     }
   };
-
   const firstName = user?.displayName?.split(" ")[0] || "Guest"; // Handle null or empty displayName
-
   return (
     <div className="min-h-screen flex">
       <Navigation
@@ -55,11 +48,9 @@ const Dashboard = () => {
         setActiveComponent={setActiveComponent}
         handleLogout={handleLogout}
       />
-
       <div className="w-3/4 bg-gray-100">
         <div className="w-full bg-white p-4 shadow-md flex justify-between items-center">
           <h1 className="text-2xl font-bold">{`Hello, ${firstName}`}</h1>
-
           <div className="flex items-center space-x-4">
             <img
               src={user?.photoURL || "default_profile_picture.png"}
@@ -77,7 +68,6 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
         <div className="p-6">
           {activeComponent === "home" ? (
             <div>
@@ -100,5 +90,4 @@ const Dashboard = () => {
     </div>
   );
 };
-
 export default Dashboard;

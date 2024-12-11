@@ -7,11 +7,9 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
-
 const InfoPage = () => {
   const { id } = useParams();
   const [farmData, setFarmData] = useState(null);
-
   useEffect(() => {
     const fetchFarmData = async () => {
       try {
@@ -26,12 +24,9 @@ const InfoPage = () => {
         console.error("Error fetching document:", error);
       }
     };
-
     fetchFarmData();
   }, [id]);
-
   if (!farmData) return <div>Loading...</div>;
-
   return (
     <div className="min-h-screen bg-white">
       {/* Top navigation */}
@@ -45,7 +40,18 @@ const InfoPage = () => {
           Get in Touch
         </button>
       </nav>
-
+            {/* About Us Section */}
+            <section className="p-8 text-center">
+        <h2 className="text-4xl font-bold mb-4">Our Minimum Viable Product(MVP)</h2>
+        <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+       As part of our MVP we have generated
+        </p>
+        <img
+          src="https://via.placeholder.com/800x400"
+          alt="About Us"
+          className="w-full h-auto mt-6"
+        />
+      </section>
       {/* Banner Section - Image Carousel */}
       <section className="bg-gray-200">
         {farmData.imageUrls && farmData.imageUrls.length > 0 ? (
@@ -71,25 +77,8 @@ const InfoPage = () => {
           <p>No images available.</p>
         )}
       </section>
-
-      {/* About Us Section */}
-      <section className="p-8 text-center">
-        <h2 className="text-4xl font-bold mb-4">About Us</h2>
-        <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-          Discover the journey of Cotton Farming, where tradition meets
-          innovation. Our cotton is farmed with dedication to sustainability and
-          quality.
-        </p>
-        <img
-          src="https://via.placeholder.com/800x400"
-          alt="About Us"
-          className="w-full h-auto mt-6"
-        />
-      </section>
-
       {/* How We Farm Section (Video) */}
       <section className="p-8 bg-gray-100">
-        <h2 className="text-4xl font-bold mb-4">How We Farm</h2>
         {farmData.videoUrls && farmData.videoUrls.length > 0 ? (
           <video controls className="w-full max-w-4xl mx-auto">
             <source src={farmData.videoUrls[0]} type="video/mp4" />
@@ -99,27 +88,28 @@ const InfoPage = () => {
           <p>No videos available.</p>
         )}
       </section>
-
       {/* Cotton Farming Details - Cards Section */}
-      <section className="p-8 text-center">
-        <h2 className="text-4xl font-bold mb-4">Our Cotton Farming Process</h2>
+      <section className="p-8 text-left">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white shadow-lg p-4">
+            <h3 className="text-2xl font-semibold">Farmer Name</h3>
+            <p>{farmData.farmName} liters</p>
+          </div>
           <div className="bg-white shadow-lg p-4">
             <h3 className="text-2xl font-semibold">Yield per Acre</h3>
             <p>{farmData.yieldPerAcre} kg</p>
           </div>
           <div className="bg-white shadow-lg p-4">
-            <h3 className="text-2xl font-semibold">Oil Produced</h3>
-            <p>{farmData.oilProduced} liters</p>
+            <h3 className="text-2xl font-semibold">By-Product</h3>
+            <p>{farmData.byProducts}</p>
           </div>
           <div className="bg-white shadow-lg p-4">
-            <h3 className="text-2xl font-semibold">Lint by Acre</h3>
-            <p>{farmData.lintByAcre} kg</p>
+            <h3 className="text-2xl font-semibold">Oil Produced</h3>
+            <p>{farmData.oilProduced} litres</p>
           </div>
           {/* Add more cards as needed */}
         </div>
       </section>
-
       {/* Footer */}
       <footer className="bg-gray-900 text-white p-6 text-center">
         <p>Ready to transform your farm? Get in touch!</p>
@@ -127,5 +117,4 @@ const InfoPage = () => {
     </div>
   );
 };
-
 export default InfoPage;

@@ -3,7 +3,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { FiHome, FiLayers, FiGrid, FiLogOut } from "react-icons/fi"; // Icons for sidebar
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
-
 const Navigation = ({ activeComponent, setActiveComponent, handleLogout }) => {
   return (
     <div className="w-1/4 bg-[#1E2C68] text-white p-6 flex flex-col justify-between">
@@ -16,7 +15,6 @@ const Navigation = ({ activeComponent, setActiveComponent, handleLogout }) => {
             className="h-16 w-auto"
           />
         </div>
-
         {/* Sidebar Items */}
         <ul className="space-y-4">
           <li>
@@ -43,11 +41,10 @@ const Navigation = ({ activeComponent, setActiveComponent, handleLogout }) => {
           </li>
         </ul>
       </div>
-
       {/* Logout Button */}
       <div className="mt-auto">
         <button
-          className="flex items-center space-x-2 w-full text-left p-2 rounded bg-[#DCC97E] hover:bg-[#c3b07a]"
+          className="flex items-center space-x-2 w-full text-left p-2 rounded bg-[#DCC97E] hover:bg-[#C3B07A]"
           onClick={handleLogout}
         >
           <FiLogOut className="text-white" />
@@ -57,5 +54,10 @@ const Navigation = ({ activeComponent, setActiveComponent, handleLogout }) => {
     </div>
   );
 };
-
 export default Navigation;
+
+
+
+
+
+
